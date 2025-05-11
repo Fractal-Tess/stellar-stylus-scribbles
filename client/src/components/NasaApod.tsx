@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from '@/components/ui/card';
+import { getApod } from '@/lib/apod';
 
 interface ApodData {
   date: string;
@@ -20,22 +20,16 @@ const NasaApod: React.FC = () => {
 
   useEffect(() => {
     const fetchApodData = async () => {
-      setIsLoading(true);
       try {
-        const response = await fetch(
-          'https://api.nasa.gov/planetary/apod?api_key=eGdkxdelaGdW3cKn4rJDGehaohPSEFsSin8dhvK7'
-        );
-        
-        if (!response.ok) {
-          throw new Error(`NASA API responded with status: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        setIsLoading(true);
+        const data = await getApod();
         setApodData(data);
         setError(null);
       } catch (err) {
         console.error('Error fetching NASA APOD data:', err);
-        setError('Failed to fetch today\'s astronomy picture. Please try again later.');
+        setError(
+          "Failed to fetch today's astronomy picture. Please try again later."
+        );
       } finally {
         setIsLoading(false);
       }
@@ -47,7 +41,9 @@ const NasaApod: React.FC = () => {
   if (isLoading) {
     return (
       <div className="glass-card rounded-lg overflow-hidden p-8 flex items-center justify-center h-96">
-        <div className="text-cosmic-stellar-cyan text-xl">Loading today's astronomy picture...</div>
+        <div className="text-cosmic-stellar-cyan text-xl">
+          Loading today's astronomy picture...
+        </div>
       </div>
     );
   }
@@ -55,7 +51,9 @@ const NasaApod: React.FC = () => {
   if (error || !apodData) {
     return (
       <div className="glass-card rounded-lg overflow-hidden p-8">
-        <p className="text-red-400">{error || 'Failed to load NASA APOD data'}</p>
+        <p className="text-red-400">
+          {error || 'Failed to load NASA APOD data'}
+        </p>
       </div>
     );
   }
@@ -64,9 +62,9 @@ const NasaApod: React.FC = () => {
     <Card className="glass-card rounded-lg overflow-hidden">
       <div className="relative">
         {apodData.media_type === 'image' ? (
-          <img 
-            src={apodData.url} 
-            alt={apodData.title} 
+          <img
+            src={apodData.url}
+            alt={apodData.title}
             className="w-full h-[400px] object-cover"
           />
         ) : (
@@ -86,20 +84,18 @@ const NasaApod: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <CardContent className="p-6">
         <h3 className="text-2xl font-serif font-bold text-cosmic-stellar-cyan mb-3">
           {apodData.title}
         </h3>
-        
-        <p className="text-white/80 mb-2 max-h-32 overflow-y-auto">
+
+        <p className="text-white/80 mb-2 max-h-60 overflow-y-auto">
           {apodData.explanation}
         </p>
-        
+
         {apodData.copyright && (
-          <p className="text-white/60 text-sm mt-4">
-            © {apodData.copyright}
-          </p>
+          <p className="text-white/60 text-sm mt-4">© {apodData.copyright}</p>
         )}
       </CardContent>
     </Card>

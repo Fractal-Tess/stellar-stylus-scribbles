@@ -1,7 +1,12 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { useShowHF } from '@/hooks/use-showHF';
 
 const BlogFooter: React.FC = () => {
+  const showFooter = useShowHF();
+  if (!showFooter) return null;
+
   return (
     <footer className="bg-cosmic-void-black py-12 mt-16">
       <div className="container mx-auto px-4">
@@ -12,7 +17,7 @@ const BlogFooter: React.FC = () => {
                 <span className="text-xl font-bold">C</span>
               </span>
               <h2 className="text-2xl font-serif font-bold text-white">
-                Cosmic<span className="text-cosmic-stellar-cyan">Insights</span>
+                <span className="text-cosmic-stellar-cyan">Insights</span>
               </h2>
             </div>
             <p className="text-white/70 mb-4">
