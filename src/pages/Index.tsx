@@ -1,9 +1,11 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import BlogHeader from '@/components/BlogHeader';
 import BlogHero from '@/components/BlogHero';
 import BlogCard from '@/components/BlogCard';
 import BlogFooter from '@/components/BlogFooter';
+import NasaApod from '@/components/NasaApod';
 
 const Index = () => {
   // Sample blog data
@@ -85,6 +87,14 @@ const Index = () => {
               featured={post.featured}
             />
           ))}
+        </div>
+        
+        <div className="mt-16 mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-serif font-bold text-white">NASA <span className="text-cosmic-stellar-cyan">Picture of the Day</span></h2>
+            <Link to="/apod" className="text-cosmic-stellar-cyan hover:underline">View Details →</Link>
+          </div>
+          <NasaApod />
         </div>
         
         <div className="mt-16">

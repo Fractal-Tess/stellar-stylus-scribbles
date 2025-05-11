@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const BlogHeader: React.FC = () => {
   return (
@@ -15,10 +16,11 @@ const BlogHeader: React.FC = () => {
         </div>
         
         <nav className="hidden md:flex items-center space-x-6">
-          <a href="#" className="text-white/80 hover:text-white transition-colors">Home</a>
-          <a href="#" className="text-white/80 hover:text-white transition-colors">Articles</a>
-          <a href="#" className="text-white/80 hover:text-white transition-colors">About</a>
-          <a href="#" className="text-white/80 hover:text-white transition-colors">Contact</a>
+          <Link to="/" className="text-white/80 hover:text-white transition-colors">Home</Link>
+          <Link to="/apod" className="text-white/80 hover:text-white transition-colors">APOD</Link>
+          <Link to="#" className="text-white/80 hover:text-white transition-colors">Articles</Link>
+          <Link to="#" className="text-white/80 hover:text-white transition-colors">About</Link>
+          <Link to="#" className="text-white/80 hover:text-white transition-colors">Contact</Link>
         </nav>
         
         <div className="flex items-center gap-4">
