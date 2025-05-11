@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+Pro:wght@300;400;600&family=Space+Mono&display=swap');
 
 @tailwind base;
@@ -94,11 +93,16 @@
   body {
     @apply bg-cosmic-deep-blue text-white;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
-  
+
   p {
     @apply font-sans;
   }
@@ -110,4 +114,8 @@
 
 .star {
   @apply absolute rounded-full bg-white animate-star-twinkle;
+}
+
+.dev {
+  @apply border-2 border-red-500;
 }
