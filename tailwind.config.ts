@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,15 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				cosmic: {
+					'deep-blue': '#0b1026',
+					'space-blue': '#1a2151',
+					'nebula-purple': '#5c1996',
+					'star-gold': '#ffd54f',
+					'stellar-cyan': '#4dd0e1',
+					'galaxy-pink': '#e91e63',
+					'void-black': '#000814'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -84,11 +94,30 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' }
+				},
+				'star-twinkle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'star-twinkle': 'star-twinkle 3s ease-in-out infinite'
+			},
+			fontFamily: {
+				'serif': ['Playfair Display', 'serif'],
+				'sans': ['Source Sans Pro', 'sans-serif'],
+				'mono': ['Space Mono', 'monospace']
+			},
+			backgroundImage: {
+				'cosmic-gradient': 'linear-gradient(to bottom, #0b1026, #1a2151)',
+				'nebula-gradient': 'linear-gradient(90deg, rgba(92,25,150,0.8) 0%, rgba(233,30,99,0.8) 100%)',
 			}
 		}
 	},
