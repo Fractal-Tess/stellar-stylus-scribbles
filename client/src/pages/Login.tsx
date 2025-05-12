@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -12,47 +12,57 @@ import {
 import { Label } from '@/components/ui/label';
 import { Mail, Lock, LogIn } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate login (would connect to auth provider in production)
-    setTimeout(() => {
-      setIsLoading(false);
+    const success = await login(email, password);
+    setIsLoading(false);
+    if (success) {
       toast({
         title: 'Login successful',
         description: 'Welcome back to CosmicInsights!',
       });
-    }, 1500);
+      navigate('/');
+    } else {
+      toast({
+        title: 'Login failed',
+        description: 'Invalid email or password',
+        variant: 'destructive',
+      });
+    }
   };
-
   // Background star elements
-  const stars = Array.from({ length: 50 }, (_, i) => {
-    const size = Math.random() * 3 + 1;
-    const top = Math.random() * 100;
-    const left = Math.random() * 100;
-    const animationDelay = Math.random() * 5;
+  const stars = useMemo(() => {
+    return Array.from({ length: 50 }, (_, i) => {
+      const size = Math.random() * 3 + 1;
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const animationDelay = Math.random() * 5;
 
-    return (
-      <div
-        key={i}
-        className="star"
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          top: `${top}%`,
-          left: `${left}%`,
-          animationDelay: `${animationDelay}s`,
-        }}
-      />
-    );
-  });
+      return (
+        <div
+          key={i}
+          className="star"
+          style={{
+            width: `${size}px`,
+            height: `${size}px`,
+            top: `${top}%`,
+            left: `${left}%`,
+            animationDelay: `${animationDelay}s`,
+          }}
+        />
+      );
+    });
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useShowHF } from '@/hooks/use-showHF';
+import { Link } from 'react-router-dom';
 
 const BlogFooter: React.FC = () => {
   const showFooter = useShowHF();
@@ -58,44 +59,44 @@ const BlogFooter: React.FC = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Black Holes
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Dark Matter
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Exoplanets
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Galaxy Formation
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Quantum Cosmology
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -106,44 +107,44 @@ const BlogFooter: React.FC = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Research Papers
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Astronomy Data
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Educational Content
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Cosmic Events
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="/#/"
+                <Link
+                  to="/"
                   className="text-white/70 hover:text-cosmic-stellar-cyan transition-colors"
                 >
                   Space Missions
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

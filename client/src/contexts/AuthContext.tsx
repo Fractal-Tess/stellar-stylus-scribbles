@@ -5,12 +5,27 @@ import {
   useEffect,
   ReactNode,
 } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { getGravatarUrl } from '@/lib/api';
+import { SERVER_URL } from '@/lib/api';
+
+interface User {
+  username: string;
+  email: string;
+  gravatarUrl: string;
+}
 
 interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<boolean>;
-  register: (username: string, password: string) => Promise<boolean>;
+  user: User | null;
+  login: (email: string, password: string) => Promise<boolean>;
+  register: (
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -30,45 +45,74 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem('jwtToken')
   );
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (token) {
       localStorage.setItem('jwtToken', token);
     } else {
       localStorage.removeItem('jwtToken');
+      setUser(null);
     }
   }, [token]);
 
-  const login = async (username: string, password: string) => {
-    const res = await fetch('/api/auth/login', {
+  useEffect(() => {
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUser(decodedToken as User);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    getGravatarUrl(token).then((res) => {
+      setUser((prevUser) => ({ ...prevUser, gravatarUrl: res.url }));
+    });
+  }, [token]);
+
+  const login = async (email: string, password: string) => {
+    const res = await fetch(`${SERVER_URL}/api/auth/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ email, password }),
     });
     if (res.ok) {
       const data = await res.json();
       setToken(data.token);
+      // Optionally decode JWT to get user info, or fetch profile later
+      setUser(null); // Set to null for now, fetch on profile page
       return true;
     }
     return false;
   };
 
-  const register = async (username: string, password: string) => {
-    const res = await fetch('/api/auth/register', {
+  const register = async (
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => {
+    const res = await fetch(`${SERVER_URL}/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, email, password, confirmPassword }),
     });
-    return res.ok;
+    if (res.ok) {
+      const data = await res.json();
+      setToken(data.token);
+      setUser(null); // Set to null for now, fetch on profile page
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
     setToken(null);
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ token, isAuthenticated: !!token, login, register, logout }}
+      value={{ token, isAuthenticated: !!token, user, login, register, logout }}
     >
       {children}
     </AuthContext.Provider>

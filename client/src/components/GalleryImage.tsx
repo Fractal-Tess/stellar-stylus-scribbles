@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { toast } from '@/components/ui/sonner';
 import { Download } from 'lucide-react';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { triggerDownload } from '@/lib/unsplash';
-import type { UnsplashImage } from '@/lib/unsplash';
+import { UnsplashImage } from '@/lib/types';
 
 interface GalleryImageProps {
   image: UnsplashImage;
 }
 
+const triggerDownload = async (downloadLocation: string): Promise<string> => {
+  // Register the download with Unsplash API, then return the download link
+  const res = await fetch(downloadLocation);
+  if (!res.ok) throw new Error('Failed to register download');
+  const data = await res.json();
+  return data.url;
+};
+
 const GalleryImage: React.FC<GalleryImageProps> = ({ image }) => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const aspectRatio = image.width / image.height;
 
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
-
-      // Get the download URL through the Unsplash API to properly attribute the download
       const downloadUrl = await triggerDownload(image.links.download_location);
 
-      // Create an anchor element and trigger the download
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.setAttribute('download', `unsplash-${image.id}.jpg`);
@@ -40,31 +43,32 @@ const GalleryImage: React.FC<GalleryImageProps> = ({ image }) => {
   };
 
   return (
-    <Card className="overflow-hidden group transition-all duration-300 hover:shadow-xl glass-card">
-      <CardContent className="p-2">
-        <AspectRatio ratio={4 / 3} className="overflow-hidden rounded-md">
-          <img
-            src={image.urls.regular}
-            alt={image.alt_description || 'Unsplash image'}
-            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-          />
-        </AspectRatio>
-      </CardContent>
-      <CardFooter className="flex justify-between items-center p-3 bg-gradient-to-t from-black/50 to-transparent text-white">
-        <div className="text-sm">
+    <div
+      className="break-inside-avoid mb-6 rounded-md overflow-hidden group bg-black/60"
+      style={{ aspectRatio: `${image.width} / ${image.height}` }}
+    >
+      <img
+        src={image.urls.regular}
+        alt={image.alt_description || 'Unsplash image'}
+        className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+        style={{ display: 'block', width: '100%', height: 'auto' }}
+      />
+      <div className="flex justify-between items-center p-3 bg-gradient-to-t from-black/60 to-transparent text-white text-xs">
+        <span>
           by <span className="font-mono">{image.user.name}</span>
-        </div>
+        </span>
         <Button
           variant="ghost"
           size="icon"
           className="rounded-full bg-white/20 hover:bg-white/40"
           onClick={handleDownload}
           disabled={isDownloading}
+          aria-label="Download image"
         >
           <Download className="h-5 w-5" />
         </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 

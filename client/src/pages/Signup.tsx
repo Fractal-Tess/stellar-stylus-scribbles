@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -13,48 +13,70 @@ import { Label } from '@/components/ui/label';
 import { Mail, Lock, User } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { register } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Simulate signup (would connect to auth provider in production)
-    setTimeout(() => {
+    if (password !== confirmPassword) {
+      toast({
+        title: 'Passwords do not match',
+        variant: 'destructive',
+      });
       setIsLoading(false);
+      return;
+    }
+    const success = await register(username, email, password, confirmPassword);
+    setIsLoading(false);
+    if (success) {
       toast({
         title: 'Account created',
         description: 'Welcome to CosmicInsights!',
       });
-    }, 1500);
+      navigate('/');
+    } else {
+      toast({
+        title: 'Signup failed',
+        description: 'Please check your details and try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   // Background star elements
-  const stars = Array.from({ length: 50 }, (_, i) => {
-    const size = Math.random() * 3 + 1;
-    const top = Math.random() * 100;
-    const left = Math.random() * 100;
-    const animationDelay = Math.random() * 5;
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 50 }, (_, i) => {
+        const size = Math.random() * 3 + 1;
+        const top = Math.random() * 100;
+        const left = Math.random() * 100;
+        const animationDelay = Math.random() * 5;
 
-    return (
-      <div
-        key={i}
-        className="star"
-        style={{
-          width: `${size}px`,
-          height: `${size}px`,
-          top: `${top}%`,
-          left: `${left}%`,
-          animationDelay: `${animationDelay}s`,
-        }}
-      />
-    );
-  });
+        return (
+          <div
+            key={i}
+            className="star"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              top: `${top}%`,
+              left: `${left}%`,
+              animationDelay: `${animationDelay}s`,
+            }}
+          />
+        );
+      }),
+    []
+  );
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -76,15 +98,15 @@ const Signup = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-white">
-                    Full Name
+                    Username
                   </Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 text-cosmic-stellar-cyan/70 h-4 w-4" />
                     <Input
                       id="name"
-                      placeholder="Jane Doe"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      placeholder="JaneDoe"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                       className="pl-10 bg-cosmic-space-blue/30 border-cosmic-stellar-cyan/30 focus:border-cosmic-stellar-cyan text-white placeholder:text-white/50"
                       required
                     />
@@ -125,6 +147,22 @@ const Signup = () => {
                   <p className="text-xs text-white/60 mt-1">
                     Password must be at least 8 characters
                   </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-white">
+                    Confirm Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-cosmic-stellar-cyan/70 h-4 w-4" />
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="pl-10 bg-cosmic-space-blue/30 border-cosmic-stellar-cyan/30 focus:border-cosmic-stellar-cyan text-white placeholder:text-white/50"
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox

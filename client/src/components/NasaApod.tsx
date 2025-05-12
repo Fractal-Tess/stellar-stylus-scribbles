@@ -1,20 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { getApod } from '@/lib/apod';
-
-interface ApodData {
-  date: string;
-  explanation: string;
-  media_type: string;
-  title: string;
-  url: string;
-  hdurl?: string;
-  copyright?: string;
-}
+import { type APODResponse, getAPOD } from '@/lib/api';
 
 const NasaApod: React.FC = () => {
-  const [apodData, setApodData] = useState<ApodData | null>(null);
+  const [apodData, setApodData] = useState<APODResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +12,7 @@ const NasaApod: React.FC = () => {
     const fetchApodData = async () => {
       try {
         setIsLoading(true);
-        const data = await getApod();
+        const data = await getAPOD();
         setApodData(data);
         setError(null);
       } catch (err) {
@@ -65,7 +55,7 @@ const NasaApod: React.FC = () => {
           <img
             src={apodData.url}
             alt={apodData.title}
-            className="w-full h-[400px] object-cover"
+            className="w-full  object-cover"
           />
         ) : (
           <div className="w-full h-[400px] flex items-center justify-center bg-cosmic-void-black">
@@ -77,12 +67,6 @@ const NasaApod: React.FC = () => {
             />
           </div>
         )}
-        <div className="absolute top-4 right-4">
-          <div className="flex items-center gap-2 bg-cosmic-nebula-purple/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
-            <Calendar className="w-4 h-4" />
-            <span>{apodData.date}</span>
-          </div>
-        </div>
       </div>
 
       <CardContent className="p-6">
@@ -98,6 +82,11 @@ const NasaApod: React.FC = () => {
           <p className="text-white/60 text-sm mt-4">© {apodData.copyright}</p>
         )}
       </CardContent>
+
+      <div className="flex items-center justify-center gap-2 bg-cosmic-nebula-purple/80 backdrop-blur-sm text-white px-3 py-2 rounded-b-lg text-sm w-full">
+        <Calendar className="w-4 h-4" />
+        <span>{apodData.date}</span>
+      </div>
     </Card>
   );
 };

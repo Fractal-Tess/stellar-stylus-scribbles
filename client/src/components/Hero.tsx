@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const BlogHero: React.FC = () => {
   return (
@@ -7,19 +8,25 @@ const BlogHero: React.FC = () => {
       {/* Dynamic stars background */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Generate 50 random stars with different sizes and positions */}
-        {Array.from({ length: 50 }).map((_, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-            }}
-          />
-        ))}
+        {Array.from({ length: 50 }).map((_, i) => {
+          const size = Math.random() * 4 + 2; // 2px to 6px
+          const opacity = Math.random() * 0.5 + 0.5; // 0.5 to 1
+          return (
+            <div
+              key={i}
+              className="star"
+              aria-hidden="true"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                opacity,
+                animationDelay: `${Math.random() * 5}s`,
+              }}
+            />
+          );
+        })}
       </div>
 
       {/* Main background with gradient */}
@@ -38,10 +45,11 @@ const BlogHero: React.FC = () => {
           leading scientists and researchers around the world.
         </p>
         <Button
+          asChild
           className="bg-nebula-gradient hover:bg-cosmic-nebula-purple/80 text-white px-8 py-6 text-lg animate-fade-in"
           style={{ animationDelay: '0.4s' }}
         >
-          Explore Articles
+          <Link to="/spaceflight-news">Explore Articles</Link>
         </Button>
       </div>
 
